@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+  <display-name>TomcatSecure</display-name>
+  <welcome-file-list>
+    <welcome-file>login.htm</welcome-file>
+  </welcome-file-list>
+  <servlet>
+    <description>All request to Single Sign on. Server to delegate to SSO server</description>
+    <display-name>SecureController</display-name>
+    <servlet-name>SecureController</servlet-name>
+    <servlet-class>com.dev.connect.secure.SecureController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SecureController</servlet-name>
+    <url-pattern>/*</url-pattern>
+  </servlet-mapping>
+  
+  
+  <servlet>
+    <description>Open ID Controller</description>
+    <display-name>OpedIDConnectController</display-name>
+    <servlet-name>OpedIDConnectController</servlet-name>
+    <servlet-class>com.dev.connect.secure.OpedIDConnectController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>OpedIDConnectController</servlet-name>
+    <url-pattern>/OpenIDConnect</url-pattern>
+  </servlet-mapping>
+</web-app>

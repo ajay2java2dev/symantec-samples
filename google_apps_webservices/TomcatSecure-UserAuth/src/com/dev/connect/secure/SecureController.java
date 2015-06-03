@@ -1,0 +1,118 @@
+package com.dev.connect.secure;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.tomcat.util.http.Cookies;
+
+/**
+ * Servlet implementation class SecureController
+ */
+public class SecureController extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	private int CONTROLLER_COUNT = 1;
+
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public SecureController() {
+		super();
+	}
+
+	@Override
+	protected void service(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		super.service(request, response);
+
+		System.out.println("Hit Number : " + CONTROLLER_COUNT++);
+
+		HttpSession session = request.getSession();
+		ConcurrentHashMap<String, Integer> map = null;
+
+		if (session.getAttribute("requestMapper") == null) {
+			map = new ConcurrentHashMap<String, Integer>();
+			map.clear();
+
+			session.setAttribute("requestMapper", map);
+		} else {
+			map = (ConcurrentHashMap<String, Integer>) session
+					.getAttribute("requestMapper");
+		}
+
+		Integer threadCount = map.get(Thread.currentThread().getName());
+		if (threadCount == null) {
+			threadCount = 1;
+			map.put(Thread.currentThread().getName(), threadCount);
+		} else {
+			threadCount = map.get(Thread.currentThread().getName());
+			threadCount++;
+			map.put(Thread.currentThread().getName(), threadCount);
+		}
+
+		
+
+		session.setAttribute("requestMapper", map);
+
+		System.out.println("Thread : " + Thread.currentThread().getName()
+				+ ", total requests : " + threadCount);
+
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doGet(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		doProcess(request, response);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doPost(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		doProcess(request, response);
+	}
+
+	private void doProcess(HttpServletRequest request,
+			HttpServletResponse response) {
+
+		if (request != null) {
+			try {
+				// TODO : Add the following to logger.isInfoEnabled ()
+				PrintWriter out = response.getWriter();
+				Cookie[] cookies = request.getCookies();
+				if (cookies != null) {
+					out.println("Cookie Info : \n\t");
+
+					for (int i = 0; i < cookies.length; i++) {
+						out.println(cookies);
+					}
+
+					HttpSession session = request.getSession();
+
+					out.println(session.getServletContext().getServerInfo());
+				}
+
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+	}
+
+}

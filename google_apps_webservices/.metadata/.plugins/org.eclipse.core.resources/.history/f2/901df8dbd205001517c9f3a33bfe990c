@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Tomcat Secure</title>
+</head>
+<body>
+	<table>
+		<tr>
+			<td> Username : </td>
+			<td> <input type="text"> </td>
+
+	</table>
+</body>
+</html>
